@@ -2,6 +2,9 @@
 
 This project provides tools for cleaning up logistics data and reconciling orders, couriers, and zones. It is designed to process input files, generate clean outputs, and help with assignment planning and reconciliation tasks for logistics operations.
 
+> **Note:** The `log.csv` file **must** include a header row with the following keys, in this exact order:  
+> `orderId,courierId,deliveredAt`
+
 ## Features
 
 - Data cleanup for orders, couriers, and zones
