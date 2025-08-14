@@ -2,11 +2,11 @@
   "name": "Logistics Cleanup & Reconciliation",
   "version": "1.0.0",
   "description": "A basic TypeScript project setup",
-  "main": "dist/index.js",
+  "main": "dist/app.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts"
+    "start": "node dist/app.js",
+    "dev": "ts-node src/app.ts"
   },
   "keywords": [],
   "author": "",

@@ -1,0 +1,8 @@
+{
+  "missing": ["ORD001"],
+  "unexpected": ["ORD-999"],
+  "duplicate": [],
+  "late": ["ORD-001"],
+  "misassigned": ["ORD-001", "ORD-002"],
+  "overloadedCouriers": []
+}

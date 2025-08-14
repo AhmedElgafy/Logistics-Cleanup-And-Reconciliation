@@ -26,7 +26,7 @@ export interface CleanOrder {
   paymentType: "COD" | "Prepaid";
   productType: "standard" | "fragile";
   weight: number;
-  deadline: string | Date;
+  deadline: string ;
 }
 export interface Order {
   orderId: string;
@@ -36,7 +36,7 @@ export interface Order {
   paymentType: string;
   productType: string;
   weight: number;
-  deadline: Date;
+  deadline: string;
 }
 export interface MappedIds {
   [key: string]: string;
@@ -64,12 +64,13 @@ export interface MappedPlanedOrders {
   [key: string]: {
     idNew: string;
     isInLogs: boolean;
-    time: Date;
+    time: string;
     courier: string;
+    weight:number
   };
 }
 export interface Log {
   orderId: string;
   courierId: string;
-  deliveredAt: Date;
+  deliveredAt: string;
 }

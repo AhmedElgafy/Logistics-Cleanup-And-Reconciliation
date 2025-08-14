@@ -1,16 +1,14 @@
-import { isCourierQualified } from "./functions";
+import { formatDate, isCourierQualified } from "./shared/functions";
 import {
   AssignmentResponse,
   CleanOrder,
   Courier,
-  MappedIds,
   MappedPlanedOrders,
 } from "./types/types";
 
 const createAssignmentResponse = (
   cleanOrders: CleanOrder[],
-  couriersCopy: Courier[],
-  mappedIds: MappedIds
+  couriersCopy: Courier[]
 ): [AssignmentResponse, MappedPlanedOrders] => {
   const mappedPlanedOrders: MappedPlanedOrders = {};
   const assignmentResponse: AssignmentResponse = {
@@ -18,25 +16,31 @@ const createAssignmentResponse = (
     unassigned: [],
     capacityUsage: [],
   };
+  const mappedCouriersCopy: { [key: string]: Courier } = structuredClone(
+    couriersCopy
+  ).reduce((obj, courier) => {
+    return { [courier.courierId]: courier, ...obj };
+  }, {});
+
   cleanOrders.forEach((order) => {
     let isAssign = false;
     for (let courier of couriersCopy) {
-      mappedPlanedOrders[mappedIds[order.orderId]] = {
+      mappedPlanedOrders[order.orderId] = {
         idNew: order.orderId,
         isInLogs: false,
-        time: new Date(order.deadline),
+        time: formatDate(order.deadline),
         courier: "",
+        weight: order.weight,
       };
-      if (courier.dailyCapacity) {
+      if (courier.dailyCapacity && !isAssign) {
         if (isCourierQualified(courier, order)) {
           courier.dailyCapacity -= order.weight;
           assignmentResponse.assignments.push({
-            courierId: courier.courierId,
             orderId: order.orderId,
+            courierId: courier.courierId,
           });
           isAssign = true;
-          mappedPlanedOrders[mappedIds[order.orderId]].courier =
-            courier.courierId;
+          mappedPlanedOrders[order.orderId].courier = courier.courierId;
         }
       }
     }
@@ -49,7 +53,9 @@ const createAssignmentResponse = (
   couriersCopy.forEach((courier) => {
     assignmentResponse.capacityUsage.push({
       courierId: courier.courierId,
-      totalWeight: courier.dailyCapacity,
+      totalWeight:
+        mappedCouriersCopy[courier.courierId].dailyCapacity -
+        courier.dailyCapacity,
     });
   });
   return [assignmentResponse, mappedPlanedOrders];

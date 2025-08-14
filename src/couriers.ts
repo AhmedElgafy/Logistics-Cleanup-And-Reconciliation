@@ -1,6 +1,7 @@
 import fs from "fs";
-import FilePath from "./statics";
+import FilePath from "./shared/statics";
 import { Courier } from "./types/types";
+import { ParseError } from "./shared/errors";
 
 const getCourier = () =>
   new Promise<Courier[]>((res, rej) => {
@@ -8,8 +9,15 @@ const getCourier = () =>
       `${FilePath}/couriers.json`,
       "utf8",
       (err, jsonString: string) => {
-        const courier: Courier[] = JSON.parse(jsonString);
-        res(courier.sort((a, b) => a.priority - b.priority));
+        try {
+          if (err) {
+            throw new Error();
+          }
+          const courier: Courier[] = JSON.parse(jsonString);
+          res(courier.sort((a, b) => a.priority - b.priority));
+        } catch {
+          rej(new ParseError("couriers.json"));
+        }
       }
     );
   });
